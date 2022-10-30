@@ -3,6 +3,7 @@ Arduino mouse and keyboard API for python.
 
 """
 
+import time
 import numpy
 import pyautogui
 from serial.serialwin32 import Serial
@@ -50,8 +51,10 @@ def release_buttons():
     _send('x')
 
 
-def click():
+def click(sleep: bool = False):
     _send('c')
+    if sleep:
+        time.sleep(0.5)
 
 
 def _send(data):
@@ -60,7 +63,7 @@ def _send(data):
     arduino.write(f'{data}{ENDING_SIGN}'.encode('utf-8'))
 
 
-def ard_mouse_to_pos(target_pos: tuple):
+def ard_mouse_to_pos(target_pos: tuple, sleep: bool = False):
     """ Move to the given pixel the screen. """
     pos = pyautogui.position()
     pos = numpy.array([pos.x, pos.y])
@@ -69,6 +72,8 @@ def ard_mouse_to_pos(target_pos: tuple):
         target_pos[1] - pos[1],
     )
     _send(f'{vector[0]}:{vector[1]}')
+    if sleep:
+        time.sleep(0.5)
 
 
 def mouse_move(pos):
